@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { createHmac } = await import('crypto');
+import { v4 as uuidv4 } from 'uuid';
 
 const userSchema = new mongoose.Schema(
     {
@@ -27,11 +29,26 @@ const userSchema = new mongoose.Schema(
     }
 )
 
+userSchema.virtual
+    .set(function(password) {
+        this._password = password;
+        this.salt = uuidv4()
+        this.securePassword(_password)
+    })
+    .get(function(){
+            return this._password
+    })
+
 userSchema.method = {
+    authenticate: function(plainPassword){
+        return this.securePassword(plainPassword) === this.encrypted_password
+    },
     securePassword : function(plainPassword){
         if(!plainPassword) return ''
         try{
-            return ''
+            return createHmac('sha256', this.salt)
+            .update(plainPassword)
+            .digest('hex');
         }
         catch(err){
             console.log(err)
