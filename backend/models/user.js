@@ -53,7 +53,6 @@ userSchema.method = {
         catch(err){
             console.log(err)
         }
-
     }
 }
 

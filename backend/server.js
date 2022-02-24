@@ -18,7 +18,7 @@ mongoose.connect(process.env.DATABASE, {useNewUrlParser: true}).then(() =>{
 })
 
 // All Routes
-app.use('/api', userRoutes)
+app.use('/api/users', userRoutes)
 
 app.get('/', (req,res) => {
   console.log('this is working')

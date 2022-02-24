@@ -3,3 +3,9 @@ exports.getAllUsers = (req,res) => {
         message:"all users"
     })
 }
+
+exports.register = (req,res) => {
+    res.json({
+        body: req.body
+    })
+}
