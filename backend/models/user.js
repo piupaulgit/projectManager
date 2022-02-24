@@ -46,7 +46,7 @@ userSchema.method = {
     securePassword : function(plainPassword){
         if(!plainPassword) return ''
         try{
-            return createHmac('sha256', this.salt)
+            return cryto.createHmac('sha256', this.salt)
             .update(plainPassword)
             .digest('hex');
         }
