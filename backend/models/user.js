@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { createHmac } = await import('crypto');
+const crypto = require('crypto');
 import { v4 as uuidv4 } from 'uuid';
 
 const userSchema = new mongoose.Schema(
@@ -46,7 +46,7 @@ userSchema.method = {
     securePassword : function(plainPassword){
         if(!plainPassword) return ''
         try{
-            return cryto.createHmac('sha256', this.salt)
+            return crypto.createHmac('sha256', this.salt)
             .update(plainPassword)
             .digest('hex');
         }
