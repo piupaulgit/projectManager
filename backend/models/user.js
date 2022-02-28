@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true,
         maxlength: 30,
-        trim: true,
+        trim: true
       },
       emailId: {
           type: String,
@@ -40,7 +40,7 @@ userSchema
   });
 
 userSchema.methods = {
-  autheticate: function(plainpassword) {
+  authenticated: function(plainpassword) {
     return this.securePassword(plainpassword) === this.encrypted_password;
   },
 
