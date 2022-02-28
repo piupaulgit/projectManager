@@ -17,20 +17,27 @@ exports.getAllUsers = (req,res) => {
 }
 
 exports.register = (req,res) => {
-    const errors = validationResult(req.body)
-    console.log(errors)
-    if(!errors.isEmpty()){
-        return res.status(422).json({
-            error: errors.array()[0].msg
-        })
-    }
     const user = new User(req.body)
     user.save((err,user) => {
         if(err){
-            return res.status(400).json(
-                validationResult(err)
-            )
+            return res.status(400).json({
+                "error": err
+            })
         }
         res.json(user)
+    })
+}
+
+exports.login = (req,res) => {
+    const {emailId, password} = req.body;
+    User.findOne({emailId}, (err, user) => {
+        if(err){
+            return res.json({
+                "error" : err
+            })
+        }
+        return res.json({
+            "user" : user
+        })
     })
 }
