@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const { validationResult } = require('express-validator');
+const jwtToken = require('jsonwebtoken')
+const expressJwt = require('express-jwt');
 
 exports.getAllUsers = (req,res) => {
     const user = new User(req.body)
@@ -36,8 +37,25 @@ exports.login = (req,res) => {
                 "error" : err
             })
         }
-        return res.json({
-            "user" : user
-        })
+        if(user){
+            if(!user.authenticated(password)){
+                return res.status(401).json({
+                    "error": "Email address and password does not match any account."
+                })
+            }
+            const token = jwtToken.sign({_id:user._id}, process.env.SECRET)
+            res.cookie("token", token, {expire: new Date() + 9999})
+
+            return res.json({
+                "token" :token,
+                "user" : user
+            })
+        }
+        else{
+            return res.json({
+                "user" : "Email address not found in DB."
+            })
+        }
+        
     })
 }
