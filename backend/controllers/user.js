@@ -2,10 +2,10 @@ const User = require('../models/user');
 const jwtToken = require('jsonwebtoken')
 const expressJwt = require('express-jwt');
 
-exports.getAllUsers = (req,res) => {
+exports.getAllUsers = (req, res) => {
     const user = new User(req.body)
-    user.save((err,user) => {
-        if(err){
+    user.save((err, user) => {
+        if (err) {
             return res.status(400).json({
                 err: "Unable to add user in the DB"
             })
@@ -13,14 +13,14 @@ exports.getAllUsers = (req,res) => {
         res.json(user)
     })
     res.json({
-        message:"all users"
+        message: "all users"
     })
 }
 
-exports.register = (req,res) => {
+exports.register = (req, res) => {
     const user = new User(req.body)
-    user.save((err,user) => {
-        if(err){
+    user.save((err, user) => {
+        if (err) {
             return res.status(400).json({
                 "error": err
             })
@@ -29,38 +29,38 @@ exports.register = (req,res) => {
     })
 }
 
-exports.login = (req,res) => {
-    const {emailId, password} = req.body;
-    User.findOne({emailId}, (err, user) => {
-        if(err){
+exports.login = (req, res) => {
+    const { emailId, password } = req.body;
+    User.findOne({ emailId }, (err, user) => {
+        if (err) {
             return res.json({
-                "error" : err
+                "error": err
             })
         }
-        if(user){
-            if(!user.authenticated(password)){
+        if (user) {
+            if (!user.authenticated(password)) {
                 return res.status(401).json({
                     "error": "Email address and password does not match any account."
                 })
             }
-            const token = jwtToken.sign({_id:user._id}, process.env.SECRET)
-            res.cookie("token", token, {expire: new Date() + 9999})
+            const token = jwtToken.sign({ _id: user._id }, process.env.SECRET)
+            res.cookie("token", token, { expire: new Date() + 9999 })
 
             return res.json({
-                "token" :token,
-                "user" : user
+                "token": token,
+                "user": user
             })
         }
-        else{
+        else {
             return res.json({
-                "user" : "Email address not found in DB."
+                "user": "Email address not found in DB."
             })
         }
-        
+
     })
 }
 
-exports.logout = (req,res) => {
+exports.logout = (req, res) => {
     res.clearCookie('token')
     res.json({
         "message": "User logged out successfully."
@@ -68,3 +68,8 @@ exports.logout = (req,res) => {
 }
 
 // custom routes
+exports.isLoggedIn = expressJwt({
+    secret: process.env.SECRET,
+    userProperty: "auth",
+    algorithms: ['HS256']
+})
