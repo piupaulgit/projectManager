@@ -13,7 +13,7 @@ exports.getAllUsers = (req, res) => {
         res.json(user)
     })
     res.json({
-        message: "all users"
+        message: "This is returing all users"
     })
 }
 
