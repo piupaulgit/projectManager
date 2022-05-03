@@ -26,8 +26,7 @@ app.get('/', (req,res) => {
 
 // port
 const port = process.env.PORT || 5000;
-
-
+screen
 
 // starting server
 app.listen(port, () =>
